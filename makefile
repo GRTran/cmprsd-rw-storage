@@ -4,10 +4,10 @@ CC=mpicc
 LD=gfortran
 
 #Set the objects
-OBJS=			    IntNLengthVector.o						\
-							DblNLengthVector.o						\
-							SparseVectorForm.o						\
-							SparseMatrixForm.o						\
+OBJS=			    Compressed-Storage/IntNLengthVector.o						\
+							Compressed-Storage/DblNLengthVector.o						\
+							Compressed-Storage/SparseVectorForm.o						\
+							Compressed-Storage/SparseMatrixForm.o						\
 							vectest.o
 
 #Set up the MODS so it contains the same as OBJS but with the .o replaced by .mod
