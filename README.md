@@ -1,2 +1,2 @@
 # cmprsd-rw-storage
-A compressed row storage matrix class has been created in Fortran along with array operations 
+A compressed row storage matrix class for use with Fortran 90 or above
