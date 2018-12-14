@@ -10,8 +10,7 @@ module SparseMatrixForm
     private
     type(sparseVector), allocatable, dimension(:)         ::    sparse_vec
   contains
-    procedure, public, pass   ::    getValue ! inputs: sparse column, output: value
-    procedure, public, pass   ::    addRowVals
+    procedure, public, pass   ::    getValue
     procedure, public, pass   ::    addSMEl
     procedure, public, pass   ::    rmSMEl
     procedure, public, pass   ::    multDblVecSM
@@ -25,9 +24,10 @@ module SparseMatrixForm
 contains
 
   !--- class constructor ---!
-  function constructor(num_rows) result(new_sparse_matrix)
+  function constructor(num_rows, num_cols) result(new_sparse_matrix)
     implicit none
     integer, intent(in)                           ::    num_rows
+    integer, intent(in)                           ::    num_cols
     type(sparseMatrix)                            ::    new_sparse_matrix
     integer                                       ::    i
 
@@ -35,7 +35,10 @@ contains
     if (num_rows < 1) stop 'Error SMF: Number of rows must be greater than 0'
     ! allocate the number of rows to the sparse vector
     allocate(new_sparse_matrix%sparse_vec(num_rows))
-    ! assign row values to sparse matrix
+    ! initialise each row of sparse vector
+    do i=1, num_rows
+      new_sparse_matrix%sparse_vec(i) = sparseVector(num_cols)
+    enddo
   end function constructor
 
   function getValue(this, row_in, col_in) result(val_out)
@@ -51,20 +54,6 @@ contains
     ! obtain the correct value
     val_out = this%sparse_vec(row_in)%getSVValue(col_in)
   end function getValue
-
-  subroutine addRowVals(this, row_in, col_in, vals_in)
-    implicit none
-    integer, intent(in)                           ::    row_in
-    double precision, dimension(:), intent(in)    ::    vals_in
-    integer, dimension(:), intent(in)             ::    col_in
-    class(sparseMatrix)                           ::    this
-
-    ! error checks
-    if (row_in == 0) stop 'Error SMF: Cannot assign a zero row'
-    if (row_in > size(this%sparse_vec)) stop 'Error SMF: Index exceeds assigned size'
-    ! assign a row a particular set of values and corresponding indices
-    this%sparse_vec(row_in) = sparseVector(vals_in,col_in)
-  end subroutine addRowVals
 
   !--- add element to sparse matrix ---!
   subroutine addSMEl(this, row_in, col_in, val_in)

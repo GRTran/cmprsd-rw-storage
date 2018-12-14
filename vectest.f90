@@ -18,10 +18,10 @@ program vectest
   use SparseMatrixForm
   implicit none
 
-  type (sparseMatrix) :: sm
-  double precision, dimension(10) :: vals
-  integer, dimension(10)            ::    col_in
-  integer :: i
+  type (sparseMatrix)                   ::    sm
+  double precision, dimension(10)       ::    vals
+  integer, dimension(10)                ::    col_in
+  integer                               ::    i
   double precision :: add = 5
   integer :: index = 11
   integer                  ::    rows
@@ -31,12 +31,13 @@ program vectest
   read(*,*) rows
 
   col_in = (/ (i,i=1,10) /)
-  vals = (/ (i,i=1,10) /)
-
-  sm = sparseMatrix(5)
-  do i=1, rows
-    call sm%addRowVals(i, col_in, vals)
+  vals = (/ (i,i=2,20,2) /)
+  ! create a square matrix
+  sm = sparseMatrix(rows, rows)
+  do i=1,10
+    call sm%addSMEl(i,i,vals(i))
   enddo
-  write(*,*) sm%getValue(1,1)
-  !sm%destroySM()
+  write(*,*) sm%getValue(5,5)
+  !write(*,*) sm%getValue(1,2)
+  !call sm%destroySM()
 end program
